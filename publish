@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TODAY=$(date +%Y-%m-%d)
+BASE=pcr.corp.falto.net/postfix
+IMAGE="${BASE}":"${TODAY}"
+LATEST="${BASE}":latest
+
+CLOUD_IMAGE=us-central1-docker.pkg.dev/falto-glob/main-usc1/postfix:latest
+
+for tag in "${LATEST}" "${CLOUD_IMAGE}"; do
+    docker tag "${IMAGE}" "${tag}"
+    docker push "${tag}"
+done

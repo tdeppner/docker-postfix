@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -euo pipefail
+
+TODAY=$(date +%Y-%m-%d)
+IMAGE=pcr.corp.falto.net/postfix:"${TODAY}"
+
+for image in $(grep ^FROM Dockerfile | awk '{print $2}' | sort | uniq); do
+    docker pull "${image}"
+done
+
+docker build . -t "${IMAGE}" --build-arg http_proxy=http://apt-proxy.corp.falto.net:3142 ${*}
+docker image ls "${IMAGE}"
